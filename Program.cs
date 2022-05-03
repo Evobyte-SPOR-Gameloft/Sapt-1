@@ -129,11 +129,8 @@
 
             Console.WriteLine("==========================");
 
-            var oddNumbers = GetOddNumbers(1, 1000000000);
-            foreach (var n in oddNumbers.Take(10))
-            {
-                Console.WriteLine($"{n}");
-            }
+            var oddNumbers = GetOddNumbers(1, 1000000).ToList();
+            Console.WriteLine(oddNumbers.Count);
         }
     }
 }
