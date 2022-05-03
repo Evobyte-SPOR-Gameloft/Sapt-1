@@ -37,6 +37,24 @@
             monster = new Monster(300, 300);
         }
 
+        private delegate int Operation(int x, int y);
+
+        private static void ApplyOperation(Operation operation, int x, int y)
+        {
+            int result = operation(x, y);
+            Console.WriteLine(result);
+        }
+
+        private static IEnumerable<int> GetOddNumbers(int start, int end)
+        {
+            for (int i = start; i <= end; i++)
+            {
+                if (i % 2 != 0)
+                {
+                    yield return i;
+                }
+            }
+        } 
 
         static void Main(string[] args)
         {
@@ -84,7 +102,38 @@
             ChangeValueOfReferenceTypePassedByReference(ref m5);
             Console.WriteLine($"m5.Damage: {m5.Damage}"); // 300
 
+            Console.WriteLine("==========================");
+
+            ApplyOperation((x, y) => x + y, 1, 2); // 3
+            ApplyOperation((x, y) => x * y, 1, 2); // 2
+            ApplyOperation((x, y) => Int32.Parse($"{x}{y}"), 1, 2); // 12
+            ApplyOperation((x, y) => x - y, 1, 2); // -1
+
+            Console.WriteLine("==========================");
+
+            Monster m6 = new Monster();
+            Player p1 = new Player();
+
+            m6.OnDamageTaken += (damage) => Console.WriteLine($"Monster took {damage} damage");
+            m6.OnDamageTaken += (damage) => { p1.Health += (int)(0.1 * damage); };
+
+            Console.WriteLine("...");
+            m6.TakeDamage(10);
+            Console.WriteLine($"p1.Health: {p1.Health}"); // 101
+
             // Console.WriteLine("Hello World!");
+            Console.WriteLine("==========================");
+
+            GameManager.Instance.StartGame();
+            GameManager.Instance.StartGame();
+
+            Console.WriteLine("==========================");
+
+            var oddNumbers = GetOddNumbers(1, 1000000000);
+            foreach (var n in oddNumbers.Take(10))
+            {
+                Console.WriteLine($"{n}");
+            }
         }
     }
 }
